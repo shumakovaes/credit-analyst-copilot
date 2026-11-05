@@ -5,8 +5,9 @@ from datetime import datetime, timezone
 from functools import lru_cache
 from uuid import UUID, uuid4
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
 
 from .agent import AnalystAgent
@@ -20,6 +21,13 @@ from .settings import Settings
 
 app = FastAPI(title="Credit Analyst Copilot", version="0.1.0", description="Read-only SQL analyst; local single-user application.")
 capacity = threading.BoundedSemaphore(2)
+
+
+@app.exception_handler(RequestValidationError)
+async def invalid_request(request: Request, exc: RequestValidationError):
+    # Do not echo invalid input, including non-JSON NaN/Infinity, into the response.
+    errors = [{key: error[key] for key in ("type", "loc", "msg")} for error in exc.errors()]
+    return JSONResponse(status_code=422, content={"detail": errors})
 
 
 @lru_cache
@@ -106,7 +114,7 @@ def export(run_id: UUID):
         raise HTTPException(409, "У этого запуска нет таблицы результата.")
     buffer = io.StringIO()
     writer = csv.writer(buffer)
-    writer.writerow(["__source_mode", "__provider_mode", *result["columns"]])
+    writer.writerow(["__source_mode", "__provider_mode", *[csv_cell(name) for name in result["columns"]]])
     for row in result["rows"]:
         writer.writerow([record["dataset"]["mode"], record["provider_mode"], *[csv_cell(row[k]) for k in result["columns"]]])
     return Response("\ufeff"+buffer.getvalue(), media_type="text/csv; charset=utf-8",

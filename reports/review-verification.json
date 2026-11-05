@@ -1,0 +1,37 @@
+{
+  "checked_at": "2026-11-05T20:31:07.788936+00:00",
+  "docker_tests": {
+    "tests": 62,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "http_validation_regressions": [
+    {
+      "path": "/ask",
+      "status": 422
+    },
+    {
+      "path": "/sql/check",
+      "status": 422
+    }
+  ],
+  "fresh_install_and_persistence": {
+    "fresh_github_clones": true,
+    "dotenv_and_local_artifacts_present_at_first_boot": false,
+    "isolated_docker_projects": [
+      "review-risk",
+      "review-copilot"
+    ],
+    "risk_demo_loans": 48,
+    "copilot_synthetic_loans": 24,
+    "risk_application_preserved_after_stop_start": true,
+    "copilot_run_preserved_after_stop_start": true,
+    "both_ui_healthchecks": "passed"
+  },
+  "api_health": {
+    "status": "ok",
+    "provider_mode": "demo",
+    "data_mode": "synthetic"
+  }
+}

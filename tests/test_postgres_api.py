@@ -102,3 +102,30 @@ def test_explicit_demo_repair_scenario(client):
     result = client.post("/ask",json={"question":"Покажи демонстрацию исправления SQL"}).json()
     assert result["status"] == "success" and result["repairs"] == 1
     assert result["result"]["rows"] == [{"loan_count":24}]
+
+
+@pytest.mark.parametrize("value", ["NaN", "Infinity", "-Infinity"])
+def test_invalid_nonfinite_question_is_a_validation_error(client, value):
+    response = client.post("/ask", content='{"question":' + value + '}',
+                           headers={"Content-Type":"application/json"})
+    assert response.status_code == 422
+    error = response.json()["detail"][0]
+    assert error["loc"] == ["body", "question"] and "input" not in error
+
+
+def test_export_escapes_formula_in_generated_column_name(client, monkeypatch):
+    import csv
+    import io
+    from types import SimpleNamespace
+    from credit_copilot import api
+    from credit_copilot.providers import plan
+
+    provider = SimpleNamespace(mode="demo", name="header-regression-fixture",
+        generate=lambda *args: plan('SELECT COUNT(*) AS "=1+1" FROM copilot_data.loans'))
+    monkeypatch.setattr(api, "make_provider", lambda settings: provider)
+    run = client.post("/ask", json={"question":"Количество кредитов"}).json()
+    assert run["status"] == "success" and run["result"]["rows"] == [{"=1+1":24}]
+    exported = client.get('/runs/' + run['run_id'] + '/csv')
+    rows = list(csv.reader(io.StringIO(exported.text.lstrip('\ufeff'))))
+    assert rows[0] == ['__source_mode', '__provider_mode', "'=1+1"]
+    assert rows[1] == ['synthetic', 'demo', '24']

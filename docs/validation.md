@@ -35,4 +35,4 @@
 
 ## Публикация и GitHub Actions
 
-Репозиторий опубликован: [shumakovaes/credit-analyst-copilot](https://github.com/shumakovaes/credit-analyst-copilot). В чистом окружении GitHub Actions на Ubuntu с Python 3.12 и PostgreSQL 17 установлены зависимости из `requirements.lock`; полный прогон завершился результатом **58 passed, 0 skipped**. [Успешный прогон](https://github.com/shumakovaes/credit-analyst-copilot/actions/runs/42101492679), проверенный коммит `622b37c3c7c004333658780a7b7039125f4175a5`. После этого изменён только данный протокол. Живые обращения к LLM в CI не выполняются.
+Репозиторий опубликован: [shumakovaes/credit-analyst-copilot](https://github.com/shumakovaes/credit-analyst-copilot). В чистом окружении GitHub Actions на Ubuntu с Python 3.12 и PostgreSQL 17 установлены зависимости из `requirements.lock`; полный прогон завершился результатом **58 passed, 0 skipped**. [Успешный прогон](https://github.com/shumakovaes/credit-analyst-copilot/actions/runs/42101492679), проверенный коммит `622b37c3c7c004333658780a7b7039125f4175a5`. Последующая проверка и изменения описаны в [повторном протоколе](review.md). Живые обращения к LLM в CI не выполняются.
