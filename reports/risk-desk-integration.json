@@ -1,0 +1,71 @@
+{
+  "source": {
+    "mode": "berka",
+    "as_of": "1999-01-01",
+    "description": "Credit Risk Desk; read-only views; created_at in UTC"
+  },
+  "direct_clean_access_denied": true,
+  "result": {
+    "status": "success",
+    "answer": "Результат запроса: loan_count = 682; original_amount_czk = 103261740.0.",
+    "sql": "SELECT COUNT(*) AS \"loan_count\", SUM(\"loans\".\"original_amount\") AS \"original_amount_czk\" FROM \"copilot_data\".\"loans\" AS \"loans\" LIMIT 201",
+    "result": {
+      "sql": "SELECT COUNT(*) AS \"loan_count\", SUM(\"loans\".\"original_amount\") AS \"original_amount_czk\" FROM \"copilot_data\".\"loans\" AS \"loans\" LIMIT 201",
+      "tables": [
+        "loans"
+      ],
+      "columns": [
+        "loan_count",
+        "original_amount_czk"
+      ],
+      "rows": [
+        {
+          "loan_count": 682,
+          "original_amount_czk": 103261740.0
+        }
+      ],
+      "truncated": false,
+      "plan_cost": 106.59,
+      "elapsed_ms": 36.08
+    },
+    "chart": {
+      "kind": "none",
+      "x": null,
+      "y": null
+    },
+    "trace": [
+      {
+        "step": "generate",
+        "status": "generated",
+        "detail": "Получен план запроса",
+        "attempt": 1,
+        "sql": "SELECT COUNT(*) AS loan_count, SUM(original_amount) AS original_amount_czk FROM copilot_data.loans",
+        "elapsed_ms": 0.14
+      },
+      {
+        "step": "validate",
+        "status": "passed",
+        "detail": "AST, таблицы, столбцы, функции и лимит проверены.",
+        "sql": "SELECT COUNT(*) AS \"loan_count\", SUM(\"loans\".\"original_amount\") AS \"original_amount_czk\" FROM \"copilot_data\".\"loans\" AS \"loans\" LIMIT 201"
+      },
+      {
+        "step": "execute",
+        "status": "success",
+        "detail": "Получено строк: 1.",
+        "elapsed_ms": 36.08,
+        "plan_cost": 106.59,
+        "truncated": false
+      },
+      {
+        "step": "answer",
+        "status": "success",
+        "detail": "Ответ сформирован из результата запроса; строки БД не отправлялись в LLM."
+      }
+    ],
+    "attempts": 1,
+    "repairs": 0,
+    "elapsed_ms": 51.42,
+    "provider_mode": "demo",
+    "model": "deterministic-demo-v1"
+  }
+}

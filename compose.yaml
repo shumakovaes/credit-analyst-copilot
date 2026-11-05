@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: copilot_admin
+      POSTGRES_PASSWORD: admin_local
+      POSTGRES_DB: copilot
+    ports: ["127.0.0.1:5434:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U copilot_admin -d copilot"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  init:
+    build: .
+    environment:
+      COPILOT_ADMIN_URL: postgresql://copilot_admin:admin_local@db:5432/copilot
+      COPILOT_READER_PASSWORD: reader_local
+    depends_on:
+      db: {condition: service_healthy}
+    command: ["credit-copilot", "init-demo"]
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      COPILOT_DATABASE_URL: ${COPILOT_TARGET_DATABASE_URL:-postgresql://credit_copilot_reader:reader_local@db:5432/copilot}
+      COPILOT_PROVIDER: ${COPILOT_PROVIDER:-demo}
+      COPILOT_LLM_API_STYLE: ${COPILOT_LLM_API_STYLE:-chat_completions}
+      COPILOT_LLM_BASE_URL: ${COPILOT_LLM_BASE_URL:-https://api.openai.com/v1}
+      COPILOT_LLM_MODEL: ${COPILOT_LLM_MODEL:-}
+      COPILOT_LLM_API_KEY: ${COPILOT_LLM_API_KEY:-}
+      COPILOT_AUDIT_PATH: /app/runtime/audit.sqlite3
+    depends_on:
+      init: {condition: service_completed_successfully}
+    volumes: ["audit:/app/runtime"]
+    ports: ["127.0.0.1:8001:8001"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  ui:
+    build: .
+    restart: unless-stopped
+    environment:
+      COPILOT_API_URL: http://api:8001
+    command: ["streamlit", "run", "streamlit_app.py", "--server.address=0.0.0.0", "--server.port=8502"]
+    depends_on:
+      api: {condition: service_healthy}
+    ports: ["127.0.0.1:8502:8502"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8502/_stcore/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+volumes:
+  pgdata:
+  audit:

@@ -1,0 +1,9 @@
+{
+  "health": {
+    "status": "ok",
+    "provider_mode": "demo",
+    "data_mode": "synthetic"
+  },
+  "errors": [],
+  "screenshots": 3
+}

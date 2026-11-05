@@ -1,0 +1,30 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: copilot_admin
+          POSTGRES_PASSWORD: admin_local
+          POSTGRES_DB: copilot_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U copilot_admin -d copilot_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      COPILOT_TEST_ADMIN_URL: postgresql://copilot_admin:admin_local@localhost:5432/copilot_test
+      COPILOT_TEST_DATABASE_URL: postgresql://credit_copilot_reader:reader_local@localhost:5432/copilot_test
+      LANGSMITH_TRACING: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - run: pip install -r requirements.lock
+      - run: pip install --no-deps -e .
+      - run: pytest -q

@@ -1,0 +1,64 @@
+{
+  "checked_at": "2026-11-05T20:06:30.047487+00:00",
+  "docker_engine": "27.3.1",
+  "docker_compose": "2.30.3-desktop.1",
+  "runtime": "Linux containers on Docker Desktop / Windows",
+  "containers": {
+    "db": {
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "image_id": "sha256:eb0fb2377534e65aad04f37838956b3dfb888e1a3dd3c1acf957bc6557eb6c7d"
+    },
+    "init": {
+      "status": "exited",
+      "health": null,
+      "exit_code": 0,
+      "image_id": "sha256:edc6859442bc43afd796c93c297ce75618660f00d6aaeee37e935413600eb33d"
+    },
+    "api": {
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "image_id": "sha256:25563799b9f7de59ed22305d8b2ad5ad39feabe75fb5c224862e84c8c28a2a66"
+    },
+    "ui": {
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "image_id": "sha256:dc5be0cd6c9a332f293cf845949cf2945174963f4921e3cd7b164eaecec5d858"
+    }
+  },
+  "tests": {
+    "tests": 58,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "api_health": {
+    "status": "ok",
+    "provider_mode": "demo",
+    "data_mode": "synthetic"
+  },
+  "ui_health": "ok",
+  "migration": {
+    "original_audit_runs_preserved": 3,
+    "current_audit_runs": 4
+  },
+  "evaluation": {
+    "cases_run": 12,
+    "cases_skipped": 8,
+    "checks_passed": 12,
+    "llm_quality_measured": false
+  },
+  "risk_desk_integration": "docker-integration.json",
+  "browser": {
+    "health": {
+      "status": "ok",
+      "provider_mode": "demo",
+      "data_mode": "synthetic"
+    },
+    "errors": [],
+    "screenshots": 3
+  }
+}

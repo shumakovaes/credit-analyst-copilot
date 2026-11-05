@@ -1,0 +1,85 @@
+{
+  "status": "success",
+  "answer": "Результат запроса: loan_count = 24.",
+  "sql": "SELECT COUNT(*) AS \"loan_count\" FROM \"copilot_data\".\"loans\" AS \"loans\" LIMIT 201",
+  "result": {
+    "sql": "SELECT COUNT(*) AS \"loan_count\" FROM \"copilot_data\".\"loans\" AS \"loans\" LIMIT 201",
+    "tables": [
+      "loans"
+    ],
+    "columns": [
+      "loan_count"
+    ],
+    "rows": [
+      {
+        "loan_count": 24
+      }
+    ],
+    "truncated": false,
+    "plan_cost": 18.51,
+    "elapsed_ms": 35.91
+  },
+  "chart": {
+    "kind": "none",
+    "x": null,
+    "y": null
+  },
+  "trace": [
+    {
+      "step": "generate",
+      "status": "generated",
+      "detail": "Получен план запроса",
+      "attempt": 1,
+      "sql": "SELECT nonexistent_balance FROM copilot_data.loans",
+      "elapsed_ms": 0.05
+    },
+    {
+      "step": "validate",
+      "status": "retry",
+      "detail": "Неизвестный или неоднозначный столбец. Сверьте имена и псевдонимы с каталогом.",
+      "code": "column"
+    },
+    {
+      "step": "repair",
+      "status": "generated",
+      "detail": "Получен план запроса",
+      "attempt": 2,
+      "sql": "SELECT COUNT(*) AS loan_count FROM copilot_data.loans",
+      "elapsed_ms": 0.03
+    },
+    {
+      "step": "validate",
+      "status": "passed",
+      "detail": "AST, таблицы, столбцы, функции и лимит проверены.",
+      "sql": "SELECT COUNT(*) AS \"loan_count\" FROM \"copilot_data\".\"loans\" AS \"loans\" LIMIT 201"
+    },
+    {
+      "step": "execute",
+      "status": "success",
+      "detail": "Получено строк: 1.",
+      "elapsed_ms": 35.91,
+      "plan_cost": 18.51,
+      "truncated": false
+    },
+    {
+      "step": "answer",
+      "status": "success",
+      "detail": "Ответ сформирован из результата запроса; строки БД не отправлялись в LLM."
+    }
+  ],
+  "attempts": 2,
+  "repairs": 1,
+  "elapsed_ms": 41.28,
+  "provider_mode": "demo",
+  "model": "deterministic-demo-v1",
+  "run_id": "d3c225bd-e10a-4ebe-bb56-4390440a6b30",
+  "conversation_id": "b3a0cac9-28b9-4f26-a2ca-7314d4625464",
+  "created_at": "2026-11-05T19:30:11.036421+00:00",
+  "question": "Покажи демонстрацию исправления SQL",
+  "dataset": {
+    "mode": "synthetic",
+    "as_of": "2025-01-01",
+    "description": "Independent synthetic fixtures v1; not model-quality evidence"
+  },
+  "currency": "CZK"
+}
